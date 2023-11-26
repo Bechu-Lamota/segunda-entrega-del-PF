@@ -1,0 +1,20 @@
+<table id="productos">
+    <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Precio</th>
+    </tr>
+    {{#each products}}
+    <tr>
+        <td>{{this.title}}</td>
+        <td>{{this.description}}</td>
+        <td>{{this.price}}</td>
+    </tr>
+    {{/each}}
+</table>
+
+<script src="/socket.io/socket.io.js"></script>
+<!-- 
+<script src="../Dao/models/productModels.js"></script>
+-->
+<script src="../product.json"></script>
