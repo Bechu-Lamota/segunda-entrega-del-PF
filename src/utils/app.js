@@ -16,7 +16,7 @@ app.use(express.static('public'))
 
 const MONGODB_CONNECT = 'mongodb+srv://lamotaas:bWSantGjgrt5fXQ5@cluster0.z23acmk.mongodb.net/ecommerce?retryWrites=true&w=majority'
 mongoose.connect(MONGODB_CONNECT)
-    .then(() => console.log('BD conectada'))
+    .then(() => console.log('BD conectada al servidor 8080'))
     .catch((e) => console.log(e))
 
 const PORT = 8080

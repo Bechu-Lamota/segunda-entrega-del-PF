@@ -1,20 +1,49 @@
-<table id="productos">
+Lista de Productos
+
+<h6> Pagina: {{page}} de {{totalPages}} </h6>
+{{!--
+{{#if noProducts }}
+No hay productos en el listado
+{{else }}
+--}}
+<table id="products">
     <tr>
-        <th>Nombre</th>
-        <th>Precio</th>
-        <th>Precio</th>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Stock</th>
     </tr>
-    {{#each products}}
     <tr>
-        <td>{{this.title}}</td>
-        <td>{{this.description}}</td>
-        <td>{{this.price}}</td>
+    <script>
+    fetch('/api/products') //Pongo la ruta del servidor para obtener el JSON.
+        .then(response => response.json())
+        .then(products => {
+            const table = document.querySelector('#products');
+
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product._id}</td>
+                    <td>${product.title}</td>
+                    <td>${product.price}</td>
+                    <td>${product.stock}</td>
+                `;
+
+                table.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error fetching JSON:', error));
+    </script>
     </tr>
-    {{/each}}
+
 </table>
 
+{{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}">Pagina anterior</a>
+{{/if}}
+
+{{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}">Pagina siguiente</a>
+{{/if}}
+
 <script src="/socket.io/socket.io.js"></script>
-<!-- 
-<script src="../Dao/models/productModels.js"></script>
--->
-<script src="../product.json"></script>

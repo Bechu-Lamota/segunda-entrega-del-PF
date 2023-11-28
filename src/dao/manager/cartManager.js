@@ -55,33 +55,67 @@ class cartManager {
         const cart = await this.getProductById(cid)
 
         try {
-            await this.model.updateOne({ _id: cart._id , 'products.product':pid}, {'products.quantity': quantity})
+            await this.model.updateOne({ _id: cart._id , 'products.product':pid}, { $set: {'products.$.quantity': quantity } })
         } catch (e) {
             throw e
         }
+    }
+
+    async updateCartProducts(cid, newProducts) {
+        const cart = await this.model.findById(cid)
+        
+        try {
+            await this.model.updateOne(
+                { _id: cart._id },
+                { $set: { products: newProducts }}
+            )
+        } catch (e) { 
+            throw e }
     }
 
     async getCartProductById() {
 
     }
 
-    async deleteCart(id) {
-        const cart = await this.getCartById(id)
-
-        if (!cart) {
-            throw new Error('Carrito inexistente')
+    async deleteCart(cid) {
+        try {
+            const cart = await this.getCartById(cid)
+            
+            if (!cart) {
+                 throw new Error('Carrito inexistente')
+                }
+                
+                await this.model.deleteOne({ _id: cid })
+            } catch (e) {
+                throw e
+            }
         }
 
-        await this.model.deleteOne({ _id: id })
-        return true
-    }
+        async deleteProductCart (cid, pid) { //elimina el producto del carrito
+            try {
+                const cart = await this.getCartById(cid)
 
+                await this.model.updateOne(
+                    {_id: cart.id},
+                    { $pull: { products: { product: pid }}}
+                )
+            } catch (e) {
+                throw e
+            }
+        }
 
+        async deleteProductsCart (cid) { //elimina todos los productos del carrito
+            try {
+                const cart = await this.model.findById(cid);
 
-
-
-
-
+                await this.model.updateOne(
+                    {_id: cart.id},
+                    { $pull: { products: [] }}
+                )
+            } catch (e) {
+                throw e
+            }
+        }
 }
 
 module.exports = cartManager
